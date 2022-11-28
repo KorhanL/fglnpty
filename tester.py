@@ -3,6 +3,7 @@
 import ctypes
 import os
 import sys
+import glob
 
 class c:
     BLACK = '\033[30m'
@@ -25,17 +26,13 @@ def compile(path, buffersize):
     flag = ""
     if buffersize is not None:
         flag = f" -D BUFFER_SIZE={buffersize} "
-    return os.system(f"gcc -Wall -Werror -Wextra {flag} {path}get_next_line.c {path}get_next_line_utils.c -shared -o gnl.so")
+    return os.system(f"gcc -Wall -Werror -Wextra {flag} {os.path.join(path, 'get_next_line.c')} {os.path.join(path, 'get_next_line_utils.c')} -shared -o gnl.so")
 
 # test a file against python's own readline
-def testfile(path):
+def testfile(path, gnl):
     fd = os.open(path, os.O_RDONLY)
     f = open(path, "r")
 
-    gnlso = ctypes.CDLL("gnl.so")
-    gnl = gnlso.get_next_line
-    gnl.argtypes = [ctypes.c_int]
-    gnl.restype = ctypes.c_char_p
 
     linenumber = 1
     errors = ""
@@ -55,15 +52,7 @@ def testfile(path):
 
 # MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN
 
-files = [
-        "test_1char_noeol.txt",
-        "test_alphabet.txt",
-        "test_lipsum_noeol.txt",
-        "test_simple.txt",
-        "test_8chars.txt",
-        "test_lipsum.txt",
-        "test_nl.txt",
-        ]
+files = glob.glob("tests/*")
 
 buffersizes = [
         None,
@@ -94,9 +83,16 @@ for buffersize in buffersizes:
     print(f"{c.UNDERLINE}{c.BLUE}BUFFER_SIZE = {buffersize}{c.RESET}")
     if compile(gnlpath, buffersize):
         die("gcc went wrong")
+
+    # import gnl as a c function
+    gnlso = ctypes.CDLL("gnl.so")
+    gnl = gnlso.get_next_line
+    gnl.argtypes = [ctypes.c_int]
+    gnl.restype = ctypes.c_char_p
+
     for file in files:
         print(f"TESTING FILE \"{file}\": ", end='')
-        errors, errorcount = testfile("tests/"+file)
+        errors, errorcount = testfile(file, gnl)
         if errorcount > 0:
             print(f"{c.RED}{errorcount} errors{c.RESET}\n")
             print(errors)
