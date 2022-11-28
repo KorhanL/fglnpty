@@ -33,7 +33,6 @@ def testfile(path, gnl):
     fd = os.open(path, os.O_RDONLY)
     f = open(path, "r")
 
-
     linenumber = 1
     errors = ""
     errorcount = 0
@@ -91,7 +90,7 @@ for buffersize in buffersizes:
     gnl.restype = ctypes.c_char_p
 
     for file in files:
-        print(f"TESTING FILE \"{file}\": ", end='')
+        print(f"TESTING FILE \"{file}\": ", end='', flush=True)
         errors, errorcount = testfile(file, gnl)
         if errorcount > 0:
             print(f"{c.RED}{errorcount} errors{c.RESET}\n")
