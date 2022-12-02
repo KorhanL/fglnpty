@@ -47,6 +47,8 @@ def testfile(path, gnl):
         #else:
         #    print(f"{c.GREEN}line {linenumber}: {mine}{c.RESET}")
         linenumber += 1
+    os.close(fd)
+    f.close()
     return errors, errorcount
 
 # MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN
