@@ -17,8 +17,20 @@ class c:
     UNDERLINE = '\033[4m'
     RESET = '\033[0m'
 
+def red(string):
+    return f"{c.RED}{string}{c.RESET}"
+
+def green(string):
+    return f"{c.GREEN}{string}{c.RESET}"
+
+def blue(string):
+    return f"{c.BLUE}{string}{c.RESET}"
+
+def ul(string):
+    return f"{c.UNDERLINE}{string}{c.RESET}"
+
 def die(message):
-    print(f"{c.RED}oh no! {message}{c.RESET}")
+    print(red(f"oh no! {message}"))
     exit(1)
 
 # compile gnl as a shared object
@@ -42,10 +54,8 @@ def testfile(path, gnl):
         if not mine and not theirs:
             break
         if mine != theirs:
-            errors += f"{c.RED}line {linenumber}:\n\tgot:    \"{mine}\"\n\twanted: \"{theirs}\"{c.RESET}"
+            errors += red(f"line {linenumber}:\n\tgot:    \"{mine}\"\n\twanted: \"{theirs}\"");
             errorcount += 1
-        #else:
-        #    print(f"{c.GREEN}line {linenumber}: {mine}{c.RESET}")
         linenumber += 1
     os.close(fd)
     f.close()
@@ -81,7 +91,7 @@ if not os.path.isdir(gnlpath):
     die("first argument should be the path to your gnl repo")
 
 for buffersize in buffersizes:
-    print(f"{c.UNDERLINE}{c.BLUE}BUFFER_SIZE = {buffersize}{c.RESET}")
+    print(ul(blue(f"BUFFER_SIZE = {buffersize}")))
     if compile(gnlpath, buffersize):
         die("gcc went wrong")
 
@@ -95,7 +105,7 @@ for buffersize in buffersizes:
         print(f"TESTING FILE \"{file}\": ", end='', flush=True)
         errors, errorcount = testfile(file, gnl)
         if errorcount > 0:
-            print(f"{c.RED}{errorcount} errors{c.RESET}\n")
+            print(red(f"{errorcount} errors\n"))
             print(errors)
         else:
-            print(f"{c.GREEN}All good!{c.RESET}")
+            print(green(f"All good!"))
