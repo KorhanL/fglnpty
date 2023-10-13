@@ -38,7 +38,7 @@ def compile(path, buffersize):
     flag = ""
     if buffersize is not None:
         flag = f" -D BUFFER_SIZE={buffersize} "
-    return os.system(f"gcc -Wall -Werror -Wextra {flag} {os.path.join(path, 'get_next_line.c')} {os.path.join(path, 'get_next_line_utils.c')} -shared -o gnl.so")
+    return os.system(f"cc -Wall -Werror -Wextra {flag} {os.path.join(path, 'get_next_line.c')} {os.path.join(path, 'get_next_line_utils.c')} -shared -o gnl.so")
 
 # test a file against python's own readline
 def testfile(path, gnl):
@@ -93,7 +93,7 @@ if not os.path.isdir(gnlpath):
 for buffersize in buffersizes:
     print(ul(blue(f"BUFFER_SIZE = {buffersize}")))
     if compile(gnlpath, buffersize):
-        die("gcc went wrong")
+        die("cc went wrong")
 
     # import gnl as a c function
     gnlso = ctypes.CDLL("gnl.so")
