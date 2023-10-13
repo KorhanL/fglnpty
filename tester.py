@@ -96,7 +96,7 @@ for buffersize in buffersizes:
         die("cc went wrong")
 
     # import gnl as a c function
-    gnlso = ctypes.CDLL("gnl.so")
+    gnlso = ctypes.CDLL("./gnl.so")
     gnl = gnlso.get_next_line
     gnl.argtypes = [ctypes.c_int]
     gnl.restype = ctypes.c_char_p
