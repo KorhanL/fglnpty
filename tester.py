@@ -54,7 +54,7 @@ def testfile(path, gnl):
         if not mine and not theirs:
             break
         if mine != theirs:
-            errors += red(f"line {linenumber}:\n\tgot:    \"{mine}\"\n\twanted: \"{theirs}\"");
+            errors += red(f"line {linenumber}:\n\tgot:    \"{mine}\"\n\twanted: \"{theirs}\"\n");
             errorcount += 1
         linenumber += 1
     os.close(fd)
